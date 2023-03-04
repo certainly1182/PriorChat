@@ -4,32 +4,24 @@ import com.google.common.collect.EvictingQueue
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
-import com.Zrips.CMI.CMI
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
 import org.bukkit.event.player.PlayerQuitEvent
 
 class PriorChat : JavaPlugin(), Listener {
-    companion object {
-        enum class Type {
-            Chat, Join, Leave
-        }
-        data class Message(val type: Type, val player: Player, val message: Component)
-        lateinit var MESSAGE_CACHE: Queue<Message>
-    }
+    private lateinit var messageCache: Queue<Component>
 
     override fun onEnable() {
         // Plugin startup logic
         saveDefaultConfig()
         val cacheSize = config.getInt("number_of_messages_to_store", 50)
         Bukkit.getLogger().info("Cache Size: $cacheSize")
-        MESSAGE_CACHE = EvictingQueue.create(cacheSize)
+        messageCache = EvictingQueue.create(cacheSize)
 
         // Register event listener
         server.pluginManager.registerEvents(this, this)
@@ -40,63 +32,33 @@ class PriorChat : JavaPlugin(), Listener {
         val player = event.player
         player.sendMessage("Chat History:")
         // send player history
-        for (message in MESSAGE_CACHE) {
-            val formattedMessage = when (message.type) {
-                Type.Chat -> formatMessage(message.player, message.message)
-                Type.Join -> Component.text("[").color(NamedTextColor.GRAY)
-                    .append(Component.text("+").color(TextColor.fromHexString("#55FFC6")))
-                    .append(Component.text("] ").color(NamedTextColor.GRAY))
-                    .append(message.player.displayName())
-                Type.Leave -> Component.text("[").color(NamedTextColor.GRAY)
-                    .append(Component.text("-").color(TextColor.fromHexString("#C655FF")))
-                    .append(Component.text("] ").color(NamedTextColor.GRAY))
-                    .append(message.player.displayName())
-            }
-            player.sendMessage(formattedMessage)
+        for (message in messageCache) {
+            player.sendMessage(message)
         }
         // log the event
-        val message = Component.text("")
-        MESSAGE_CACHE.add(Message(Type.Join, player, message))
+        messageCache.add(Component.text("[").color(NamedTextColor.GRAY)
+            .append(Component.text("+").color(TextColor.fromHexString("#55FFC6")))
+            .append(Component.text("] ").color(NamedTextColor.GRAY))
+            .append(player.displayName()))
     }
 
     @EventHandler
     fun onPlayerChat(event: AsyncChatEvent) {
         val player = event.player
         val message = event.message()
-        MESSAGE_CACHE.add(Message(Type.Chat, player, message))
+        messageCache.add(Component.text()
+            .append(player.displayName())
+            .append(Component.text(": ").color(NamedTextColor.GRAY))
+            .append(message).build())
     }
 
     @EventHandler
     fun onPlayerLeave(event: PlayerQuitEvent) {
         val player = event.player
-        val message = Component.text("")
-        MESSAGE_CACHE.add(Message(Type.Leave, player, message))
-    }
-
-    private fun formatMessage(player: Player, message: Component): Component {
-        val prefix: Component
-        val name: Component
-        /*if (checkInstalled("CMI")) {
-            val cmiUser = CMI.getInstance().playerManager.getUser(player)
-            prefix = Component.text(cmiUser.prefix)
-            name = Component.text(cmiUser.displayName)
-        } else {
-            prefix = Component.text("")
-            name = player.displayName()
-        }*/
-        name = player.displayName()
-        prefix = Component.text("")
-        return prefix.append(name)
-            .append(Component.text(": ").color(NamedTextColor.GRAY))
-            .append(message)
-
-    }
-
-    private fun checkInstalled(plugin: String): Boolean{
-        return server.pluginManager.getPlugin(plugin) != null
-    }
-
-    override fun onDisable() {
-        // Plugin shutdown logic
+        // log the event
+        messageCache.add(Component.text("[").color(NamedTextColor.GRAY)
+            .append(Component.text("-").color(TextColor.fromHexString("#C655FF")))
+            .append(Component.text("] ").color(NamedTextColor.GRAY))
+            .append(player.displayName()))
     }
 }
