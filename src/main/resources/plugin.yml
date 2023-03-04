@@ -1,0 +1,4 @@
+name: PriorChat
+version: '${project.version}'
+main: me.certainly1182.priorchat.PriorChat
+api-version: 1.19
