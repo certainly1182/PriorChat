@@ -11,8 +11,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 import com.Zrips.CMI.CMI
-import io.papermc.paper.event.player.AbstractChatEvent
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
+import org.bukkit.event.player.PlayerQuitEvent
 
 class PriorChat : JavaPlugin(), Listener {
     companion object {
@@ -40,12 +41,21 @@ class PriorChat : JavaPlugin(), Listener {
         player.sendMessage("Chat History:")
         // send player history
         for (message in MESSAGE_CACHE) {
-            val formattedMessage = formatMessage(message.player, message.message)
-            println(formattedMessage)
+            val formattedMessage = when (message.type) {
+                Type.Chat -> formatMessage(message.player, message.message)
+                Type.Join -> Component.text("[").color(NamedTextColor.GRAY)
+                    .append(Component.text("+").color(TextColor.fromHexString("#55FFC6")))
+                    .append(Component.text("] ").color(NamedTextColor.GRAY))
+                    .append(message.player.displayName())
+                Type.Leave -> Component.text("[").color(NamedTextColor.GRAY)
+                    .append(Component.text("-").color(TextColor.fromHexString("#C655FF")))
+                    .append(Component.text("] ").color(NamedTextColor.GRAY))
+                    .append(message.player.displayName())
+            }
             player.sendMessage(formattedMessage)
         }
         // log the event
-        val message = Component.text(" joined the game").color(NamedTextColor.YELLOW)
+        val message = Component.text("")
         MESSAGE_CACHE.add(Message(Type.Join, player, message))
     }
 
@@ -54,15 +64,14 @@ class PriorChat : JavaPlugin(), Listener {
         val player = event.player
         val message = event.message()
         MESSAGE_CACHE.add(Message(Type.Chat, player, message))
-        println(Message(Type.Chat, player, message))
     }
 
-    /*@EventHandler
+    @EventHandler
     fun onPlayerLeave(event: PlayerQuitEvent) {
         val player = event.player
-        val message = Component.text(" left the game").color(NamedTextColor.YELLOW)
+        val message = Component.text("")
         MESSAGE_CACHE.add(Message(Type.Leave, player, message))
-    }*/
+    }
 
     private fun formatMessage(player: Player, message: Component): Component {
         val prefix: Component
