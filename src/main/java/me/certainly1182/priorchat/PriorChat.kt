@@ -17,7 +17,7 @@ import org.bukkit.Bukkit
 class PriorChat : JavaPlugin(), Listener {
     companion object {
         enum class Type {
-            chat, join, leave
+            Chat, Join, Leave
         }
         data class Message(val type: Type, val player: Player, val message: Component)
         lateinit var MESSAGE_CACHE: Queue<Message>
@@ -46,22 +46,22 @@ class PriorChat : JavaPlugin(), Listener {
         }
         // log the event
         val message = Component.text(" joined the game").color(NamedTextColor.YELLOW)
-        MESSAGE_CACHE.add(Message(Type.join, player, message))
+        MESSAGE_CACHE.add(Message(Type.Join, player, message))
     }
 
     @EventHandler
     fun onPlayerChat(event: AsyncChatEvent) {
         val player = event.player
         val message = event.message()
-        MESSAGE_CACHE.add(Message(Type.chat, player, message))
-        println(Message(Type.chat, player, message))
+        MESSAGE_CACHE.add(Message(Type.Chat, player, message))
+        println(Message(Type.Chat, player, message))
     }
 
     /*@EventHandler
     fun onPlayerLeave(event: PlayerQuitEvent) {
         val player = event.player
         val message = Component.text(" left the game").color(NamedTextColor.YELLOW)
-        MESSAGE_CACHE.add(Message(Type.leave, player, message))
+        MESSAGE_CACHE.add(Message(Type.Leave, player, message))
     }*/
 
     private fun formatMessage(player: Player, message: Component): Component {
