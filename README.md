@@ -1,15 +1,16 @@
 # PriorChat Plugin
 [![GitHub Release](https://img.shields.io/github/v/release/certainly1182/PriorChat?include_prereleases)](https://github.com/certainly1182/PriorChat/releases)
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/JMSHw1n4)
 
-The PriorChat plugin is a simple plugin for Minecraft [Paper](https://papermc.io) servers that stores and displays a history of chat messages for players when they join the server.
+Simple plugin for Minecraft [Paper](https://papermc.io) servers that stores and displays a history of chat messages for players when they join the server.
 
 ## Features
 - Stores a configurable number of past chat messages in a queue.
 - Displays past chat messages to players when they join the server.
 - Caches join, chat, quit, and death messages.
 ## Installation
-To install the PriorChat plugin, follow these steps:
-1. Download the plugin JAR file from [Modrinth](https://modrinth.com) or the [Releases](https://github.com/certainly1182/PriorChat/releases) page.
+To install PriorChat, follow these steps:
+1. Download the plugin JAR file from [Modrinth](https://modrinth.com/plugin/priorchat) or the [Releases](https://github.com/certainly1182/PriorChat/releases) page.
 2. Place the JAR file in the plugins folder of your Paper (or Paper fork) server.
 3. Start the server and verify that the plugin loaded successfully.
 ## Configuration
