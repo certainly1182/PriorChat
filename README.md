@@ -1,6 +1,6 @@
 # PriorChat Plugin
 [![GitHub Release](https://img.shields.io/github/v/release/certainly1182/PriorChat?include_prereleases)](https://github.com/certainly1182/PriorChat/releases)
-![Modrinth Downloads](https://img.shields.io/modrinth/dt/JMSHw1n4)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/JMSHw1n4)](https://modrinth.com/plugin/priorchat)
 
 Simple plugin for Minecraft [Paper](https://papermc.io) servers that stores and displays a history of chat messages for players when they join the server.
 
