@@ -18,7 +18,17 @@ The plugin can be configured via the `config.yml` file located in `plugins/Prior
 
 The following configuration options are available:
 
-- `number_of_messages_to_store` (default: 50) - the maximum number of chat messages to store in the queue.
+- `number_of_messages_to_store` (default: 50) - The maximum number of chat messages to store in the queue.
+- `enabled_message_types` (default: all message types) - List of message types to enable. Valid values are `CHAT`, `JOIN`, `QUIT` and `DEATH`.
+### Default Config:
+```yml
+number_of_messages_to_store: 50
+enabled_message_types:
+  - CHAT
+  - JOIN
+  - QUIT
+  - DEATH
+```
 ## Usage
 The PriorChat plugin does not *yet* have any commands or permissions. Simply install the plugin on your server to start using it.
 
