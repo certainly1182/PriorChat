@@ -1,1 +1,6 @@
 number_of_messages_to_store: 50
+enabled_message_types:
+  - CHAT
+  - JOIN
+  - QUIT
+  - DEATH
