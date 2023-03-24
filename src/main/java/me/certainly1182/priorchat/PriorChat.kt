@@ -5,7 +5,6 @@ import me.certainly1182.priorchat.listeners.*
 import net.kyori.adventure.text.Component
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
-import org.bukkit.Bukkit
 
 class PriorChat : JavaPlugin() {
     private var debugMode: Boolean = false
@@ -14,14 +13,17 @@ class PriorChat : JavaPlugin() {
         JOIN,
         CHAT,
         QUIT,
-        DEATH
+        DEATH,
+        BROADCAST,
+        ADVANCEMENT,
+        KICK
     }
     private lateinit var enabledMessageTypes: Set<MessageType>
     override fun onEnable() {
         saveDefaultConfig()
         debugMode = config.getBoolean("debug_mode", false)
         val cacheSize = config.getInt("number_of_messages_to_store", 50)
-        Bukkit.getLogger().info("[PriorChat] Cache Size: $cacheSize")
+        println("[PriorChat] Cache Size: $cacheSize")
         messageCache = EvictingQueue.create(cacheSize)
 
         // Read enabled message types from config
@@ -39,7 +41,10 @@ class PriorChat : JavaPlugin() {
             MessageType.JOIN to PlayerJoinListener(this),
             MessageType.CHAT to PlayerChatListener(this),
             MessageType.QUIT to PlayerQuitListener(this),
-            MessageType.DEATH to PlayerDeathListener(this)
+            MessageType.DEATH to PlayerDeathListener(this),
+            MessageType.BROADCAST to ServerBroadcastListener(this),
+            MessageType.ADVANCEMENT to PlayerAdvancementDoneListener(this),
+            MessageType.KICK to PlayerKickListener(this)
         )
         // Register event listeners
         for (type in enabledMessageTypes) {
