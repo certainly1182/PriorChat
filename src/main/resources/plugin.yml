@@ -2,3 +2,5 @@ name: PriorChat
 version: '${project.version}'
 main: me.certainly1182.priorchat.PriorChat
 api-version: 1.19
+description: Sends chat, join, leave and death messages that happened before a player logged in, when they login
+author: certainly1182
