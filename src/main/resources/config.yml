@@ -5,3 +5,6 @@ enabled_message_types:
   - JOIN
   - QUIT
   - DEATH
+  - BROADCAST
+  - ADVANCEMENT
+  - KICK
